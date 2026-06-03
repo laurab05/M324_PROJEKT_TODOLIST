@@ -1,0 +1,43 @@
+name: Build Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  build-frontend:
+    name: Build React Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Dependencies installieren
+        run: npm install
+        working-directory: ./frontend
+
+      - name: Frontend bauen
+        run: npm run build
+        working-directory: ./frontend
+
+  build-backend:
+    name: Build Java Backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Java einrichten
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Maven Build
+        run: mvn clean package
+        working-directory: ./backend
